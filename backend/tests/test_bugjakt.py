@@ -17,3 +17,13 @@ client = TestClient(app)
 
 
 # Skriv ert test här:
+
+def test_stats_after_deleting_item():
+    milk = client.post("/api/items", json={"text": "milk"}).json()
+    bread = client.post("/api/items", json={"text": "bread"}).json()
+
+    client.delete(f"/api/items/{bread['id']}")
+
+    response = client.get("/api/items/stats")
+
+    assert response.json() == {"count": 1, "total_characters": 4}
